@@ -7,4 +7,6 @@ from main_app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('home/', views.HomeView.as_view(), name="home"),
+    path('sub-page/', views.SubPageView.as_view(), name="sub-page"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

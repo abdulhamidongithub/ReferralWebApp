@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .content {
+            max-width: 600px;
+            text-align: center;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        input[type="email"], input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #444444;
+        }
+        a {
+            display: block;
+            margin: 10px 0;
+            color: #0000ee;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .faq {
+            margin-top: 20px;
+        }
+        .faq h3 {
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        .faq .answer {
+            display: none;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>Welcome to Our Website</h1>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel urna at odio commodo venenatis.
+            Cras auctor mi nec justo pharetra, vel elementum nisi vestibulum. Pellentesque habitant morbi tristique
+            senectus et netus et malesuada fames ac turpis egestas. Nulla facilisi. Duis dignissim turpis ac ligula
+            facilisis, non bibendum metus scelerisque. Ut varius, nulla et ultricies pulvinar, dui nunc facilisis nisi,
+            eget luctus felis libero in est. Vivamus ullamcorper quam sed nisl vestibulum, at varius mi pulvinar.
+        </p>
+
+        <form method="post" >
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="email" name="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <input type="text" name="referrer" placeholder="Referrer (optional)" value="{{ request.GET.referrer }}">
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+
+        <a href="/delete/info/">Remove your account</a>
+        <a href="/colloboration-page/">Collaboration</a>
+        <a href="/sub-page/">Other Sub-page</a>
+        <a href="/path/to/privacy_policy.pdf">Privacy Policy</a>
+
+        <div class="faq">
+            <h2>Frequently Asked Questions</h2>
+            <div>
+                <h3 onclick="toggleAnswer('q1')">What is this website about?</h3>
+                <div id="q1" class="answer">
+                    <p>This website is about...</p>
+                </div>
+            </div>
+            <div>
+                <h3 onclick="toggleAnswer('q2')">How do I sign up?</h3>
+                <div id="q2" class="answer">
+                    <p>You can sign up by...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAnswer(id) {
+            var answer = document.getElementById(id);
+            if (answer.style.display === "none" || answer.style.display === "") {
+                answer.style.display = "block";
+            } else {
+                answer.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
