@@ -7,7 +7,10 @@ from .models import *
 
 class HomeView(View):
     def get(self, request):
-        return render(request, 'home.html')
+        context = {
+            "questions": FAQuestion.objects.all()
+        }
+        return render(request, 'home.html', context)
 
 class SubPageView(View):
     def get(self, request):
@@ -15,23 +18,37 @@ class SubPageView(View):
 
 class RegisterView(View):
     def get(self, request):
-        return render(request, 'register.html')
+        ref_id = request.GET.get("referrer_id", "none")
+        context = {
+            "referrer_id": ref_id
+        }
+        return render(request, 'register.html', context)
 
     def post(self, request):
+        referrer_id = request.POST.get("referrer_id")
         user = User.objects.filter(username = request.POST.get("username"))
         if user.exists():
-            return render(request, "register.html", {"error": "This username is not available"})
+            return render(
+                request,
+                "register.html",
+                {"error": "This username is not available", "referrer_id": referrer_id}
+            )
+        referrer = None
+        if referrer_id != "none":
+            referrer_id = User.objects.filter(id = referrer_id)
+            if referrer_id.exists():
+                referrer = referrer_id.first()
         user = User.objects.create(
             username = request.POST.get("username"),
             email = request.POST.get("email"),
             password = request.POST.get("password"),
             is_superuser = False,
-            is_staff = False
+            is_staff = False,
+            referrer = referrer
         )
         user.referral_link = settings.BASE_URL + f'/register/?referrer_id={user.id}'
         user.save()
         return redirect("login")
-
 
 class LoginView(View):
     def get(self, request):
