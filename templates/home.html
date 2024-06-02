@@ -77,6 +77,24 @@
             display: none;
             margin: 10px 0;
         }
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-size: 1em;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
     </style>
 </head>
 <body>
@@ -94,6 +112,15 @@
             {% endif %}
         </div>
         {% endif %}
+
+        <!-- Display Success or Error Message -->
+        {% if success_message %}
+            <div class="message success">{{ success_message }}</div>
+        {% endif %}
+        {% if error %}
+            <div class="message error">{{ error }}</div>
+        {% endif %}
+
         <h1>Welcome to Our Website</h1>
         <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel urna at odio commodo venenatis.
@@ -103,17 +130,22 @@
             eget luctus felis libero in est. Vivamus ullamcorper quam sed nisl vestibulum, at varius mi pulvinar.
         </p>
 
-<!--        <form method="post" >-->
-<!--            {% csrf_token %}-->
-<!--            <div class="form-group">-->
-<!--                <input type="email" name="email" placeholder="Enter your email" required>-->
-<!--            </div>-->
-<!--            <div class="form-group">-->
-<!--                <input type="text" name="referrer" placeholder="Referrer (optional)" value="{{ request.GET.referrer }}">-->
-<!--            </div>-->
-<!--            <button type="submit">Submit</button>-->
-<!--        </form>-->
-         {% if request.user.username %}
+        <form method="post" action="{% url 'home' %}"> {% csrf_token %}
+            <div class="form-group">
+                <input type="email" name="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <input type="hidden" name="referrer_id" value="{{ referrer_id }}">
+            </div>
+            {% if referrer_id %}
+            <div class="form-group">
+                <input type="text" name="referrer" placeholder="Referrer" value="{{ referrer_id }}">
+            </div>
+            {% endif %}
+            <button type="submit">Submit</button>
+        </form>
+
+        {% if request.user.username %}
         <a href="/logout/">Logout</a>
         {% endif %}
         <a href="/delete/info/">Remove your information</a>
