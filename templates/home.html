@@ -104,8 +104,8 @@
         <div class="user-info">
             <h2>{{ request.user.username }}</h2>
             <p><strong>Email:</strong> {{ request.user.email }}</p>
-            {% if request.user.referral_link %}
-                <p><strong>Referral Link:</strong> {{ request.user.referral_link }}</p>
+            {% if request.user.username %}
+                <p><strong>Referral Link:</strong> {{ referral_link }}</p>
             {% endif %}
             {% if request.user.referrer %}
                 <p><strong>Referrer:</strong> {{ request.user.referrer }}</p>
@@ -148,8 +148,9 @@
         {% if request.user.username %}
         <a href="/logout/">Logout</a>
         {% endif %}
-        <a href="/delete/info/">Remove your information</a>
+        <a href="/user-deletion/">Remove your information</a>
         <a href="/colloboration-page/">Collaboration</a>
+        <a href="/contact/">Contact</a>
         <a href="/sub-page/">Other Sub-page</a>
         <a href="/path/to/privacy_policy.pdf">Privacy Policy</a>
 

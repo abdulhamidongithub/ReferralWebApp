@@ -3,15 +3,20 @@ from django.views import View
 from django.contrib.auth import login, logout
 from django.conf import settings
 from django.core.mail import send_mail
+import random
 
 from .models import *
 
 class HomeView(View):
     def get(self, request):
         ref_id = request.GET.get("referrer_id", False)
+        referral_link = None
+        if request.user.username:
+            referral_link = f"{settings.BASE_URL}/?referrer_id={request.user.username}/"
         context = {
             "questions": FAQuestion.objects.all(),
-            "referrer_id": ref_id
+            "referrer_id": ref_id,
+            "referral_link": referral_link
         }
         return render(request, 'home.html', context)
 
@@ -19,7 +24,7 @@ class HomeView(View):
         referrer_id = request.POST.get("referrer_id", False)
         referrer = None
         if referrer_id != 'False':
-            referrer_id = User.objects.filter(id=referrer_id)
+            referrer_id = User.objects.filter(username=referrer_id)
             if referrer_id.exists():
                 referrer = referrer_id.first()
         waiting_user = WaitingUser.objects.filter(
@@ -77,8 +82,6 @@ class RegisterView(View):
             is_superuser = False,
             is_staff = False
         )
-        user.referral_link = settings.BASE_URL + f'/?referrer_id={user.id}'
-        user.save()
         return redirect("login")
 
 class LoginView(View):
@@ -100,3 +103,50 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect("login")
+
+class ContactView(View):
+    def get(self, request):
+        return render(request, 'contact.html')
+
+class UserDeletion(View):
+    def get(self, request):
+        return render(request, 'user-deletion.html')
+
+    def post(self, request):
+        email = request.POST.get("email")
+        waiting_user = WaitingUser.objects.filter(email = email)
+        if not waiting_user.exists():
+            context = {
+                "error": "Email not found in our subscription list"
+            }
+            return render(request, 'user-deletion.html', context)
+        recipient_list = [email]
+        code = str(random.randrange(1000000, 9999999))
+        waiting_user = waiting_user.first()
+        waiting_user.confirmation_code = code
+        waiting_user.save()
+        email_data = {
+            "email_body": "Click to the link below to remove your email: "
+                          f"{settings.BASE_URL}/confirm-deletion/{code}/",
+            "to_email": recipient_list,
+            "email_subject": "Subscription to the referral app",
+        }
+        send_mail(
+            email_data["email_subject"],
+            message=email_data["email_body"],
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=email_data["to_email"],
+        )
+        context = {
+            "message": "Confirmation link sent to your email"
+        }
+        return render(request, 'user-deletion.html', context)
+
+class ConfirmDeletion(View):
+    def get(self, request, pk):
+        waiting_user = WaitingUser.objects.filter(confirmation_code = pk)
+        waiting_user.delete()
+        context = {
+            "message": "Email deleted succesfully"
+        }
+        return render(request, 'confirmation.html', context)

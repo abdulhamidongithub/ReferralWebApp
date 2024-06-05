@@ -5,7 +5,6 @@ import uuid
 class User(AbstractUser):
     id = models.UUIDField(unique=True, default=uuid.uuid4, editable=False, primary_key=True)
     email = models.EmailField(unique=True)
-    referral_link = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -24,6 +23,7 @@ class User(AbstractUser):
 class WaitingUser(models.Model):
     email = models.EmailField(unique=True)
     referrer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    confirmation_code = models.CharField(max_length=7, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
