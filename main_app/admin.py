@@ -1,13 +1,26 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
 
 from .models import *
 
-class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ["id", "username", "email", "password"]
+class CustomUserAdmin(BaseUserAdmin):
+    list_display = ["id", "username", "email"]
     list_display_links = ["id", "username"]
     search_fields = ["username", "email"]
     list_per_page = 30
+
+    fieldsets = (
+        (None, {'fields': ('username', 'password', 'email')}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('username', 'email', 'password1', 'password2'),
+        }),
+    )
+
+    ordering = ['-id']
 
 class WaitingUserAdmin(admin.ModelAdmin):
     list_display = ["id", "email", "created_at"]

@@ -12,6 +12,7 @@ urlpatterns = [
     path('register/', views.RegisterView.as_view(), name="register"),
     path('contact/', views.ContactView.as_view(), name="contact"),
     path('user-deletion/', views.UserDeletion.as_view(), name="user-deletion"),
+    path('colloboration/', views.ColloborationView.as_view(), name="user-deletion"),
     path('confirm-deletion/<str:pk>/', views.ConfirmDeletion.as_view(), name="confirm-deletion"),
     path('login/', views.LoginView.as_view(), name="login"),
     path('logout/', views.LogoutView.as_view(), name="logout"),

@@ -11,8 +11,6 @@ class User(AbstractUser):
     first_name = None
     last_name = None
     last_login = None
-    groups = None
-    user_permissions = None
 
     def __str__(self):
         return self.username
@@ -36,12 +34,12 @@ class WaitingUser(models.Model):
 class Recommendation(models.Model):
     referrer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recommendations')
     recommended_person = models.CharField(max_length=255)
-    email = models.EmailField()
+    email = models.EmailField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.recommended_person} by {self.user.username}"
+        return f"{self.recommended_person}"
 
     class Meta:
         ordering = ["-id"]

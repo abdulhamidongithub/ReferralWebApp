@@ -75,7 +75,7 @@ class RegisterView(View):
                 "register.html",
                 {"error": "This username is not available"}
             )
-        user = User.objects.create(
+        User.objects.create(
             username = request.POST.get("username"),
             email = request.POST.get("email"),
             password = request.POST.get("password"),
@@ -150,3 +150,18 @@ class ConfirmDeletion(View):
             "message": "Email deleted succesfully"
         }
         return render(request, 'confirmation.html', context)
+
+class ColloborationView(View):
+    def get(self, request):
+        return render(request, 'colloboration.html')
+
+    def post(self, request):
+        Recommendation.objects.create(
+            referrer = request.user,
+            email = request.POST.get("email"),
+            recommended_person = request.POST.get("person_name")
+        )
+        context = {
+            "message": "Data saved succesfully!"
+        }
+        return render(request, 'colloboration.html', context)
