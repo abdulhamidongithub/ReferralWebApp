@@ -10,13 +10,9 @@ from .models import *
 class HomeView(View):
     def get(self, request):
         ref_id = request.GET.get("referrer_id", False)
-        referral_link = None
-        if request.user.username:
-            referral_link = f"{settings.BASE_URL}/?referrer_id={request.user.username}/"
         context = {
             "questions": FAQuestion.objects.all(),
-            "referrer_id": ref_id,
-            "referral_link": referral_link
+            "referrer_id": ref_id
         }
         return render(request, 'home.html', context)
 
@@ -33,6 +29,7 @@ class HomeView(View):
         if waiting_user.exists():
             context = {
                 "questions": FAQuestion.objects.all(),
+                "referrer_id": referrer_id,
                 "error": "This email owner has already subscribed!"
             }
             return render(request, 'home.html', context)

@@ -83,7 +83,7 @@
 
         {% if request.user.is_authenticated %}
             <p>Welcome, {{ request.user.username }}!</p>
-            <p>Your referral link: <a href="http://127.0.0.1:8000/?referrer_id={{ request.user.username }}">http://127.0.0.1:8000/?referrer_id={{ request.user.username }}</a></p>
+            <p>Your referral link: <a href="http://omborxona11.pythonanywhere.com/?referrer_id={{ request.user.username }}">http://omborxona11.pythonanywhere.com/?referrer_id={{ request.user.username }}</a></p>
         {% else %}
             <p class="message error">Please <a href="{% url 'login' %}">log in</a> to see your referral link.</p>
         {% endif %}
