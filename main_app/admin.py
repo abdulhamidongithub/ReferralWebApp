@@ -36,7 +36,7 @@ class RecommendationAdmin(admin.ModelAdmin):
     list_per_page = 30
 
 class FAQuestionAdmin(admin.ModelAdmin):
-    list_display = ["id", "question", "answer"]
+    list_display = ["id", "order", "question", "answer"]
     list_display_links = ["id", "question"]
     search_fields = ["question", "answer"]
     list_per_page = 30

@@ -53,11 +53,14 @@
         a:hover {
             text-decoration: underline;
         }
+        .back-to-home {
+            margin-top: 20px;
+            display: block;
+        }
     </style>
 </head>
 <body>
     <div class="content">
-        <a href="{% url 'home' %}">Home</a>
         <h1>Contact Us</h1>
         <form action="https://formspree.io/f/mzbnljad" method="POST">
             <label>
@@ -70,6 +73,7 @@
             </label>
             <button type="submit">Send</button>
         </form>
+        <a href="{% url 'home' %}" class="back-to-home">Back to Home</a>
     </div>
 </body>
 </html>

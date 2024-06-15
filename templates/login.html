@@ -55,6 +55,10 @@
             color: red;
             margin-bottom: 15px;
         }
+        .back-to-home {
+            margin-top: 20px;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -74,6 +78,7 @@
             <button type="submit">Login</button>
         </form>
         <a href="{% url 'register' %}">No account? Sign Up</a>
+        <a href="{% url 'home' %}" class="back-to-home">Back to Home</a>
     </div>
 </body>
 </html>

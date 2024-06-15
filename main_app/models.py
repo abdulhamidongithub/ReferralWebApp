@@ -21,7 +21,7 @@ class User(AbstractUser):
 class WaitingUser(models.Model):
     email = models.EmailField(unique=True)
     referrer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    confirmation_code = models.CharField(max_length=7, blank=True, null=True)
+    deletion_confirmation_code = models.CharField(max_length=7, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -47,9 +47,10 @@ class Recommendation(models.Model):
 class FAQuestion(models.Model):
     question = models.CharField(max_length=300)
     answer = models.TextField()
+    order = models.PositiveSmallIntegerField(null=True, blank=True)
 
     def __str__(self):
-        return self.question
+        return f"{self.order}. {self.question}"
 
     class Meta:
         verbose_name = "FAQuestion"

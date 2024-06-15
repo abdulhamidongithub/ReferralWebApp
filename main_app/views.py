@@ -23,6 +23,13 @@ class HomeView(View):
             referrer_id = User.objects.filter(username=referrer_id)
             if referrer_id.exists():
                 referrer = referrer_id.first()
+            else:
+                context = {
+                    "questions": FAQuestion.objects.all(),
+                    "referrer_id": referrer_id,
+                    "error": "Referrer not found"
+                }
+                return render(request, 'home.html', context)
         waiting_user = WaitingUser.objects.filter(
             email = request.POST.get("email")
         )
@@ -72,6 +79,12 @@ class RegisterView(View):
                 "register.html",
                 {"error": "This username is not available"}
             )
+        if request.POST.get("password") != request.POST.get("confirm_password"):
+            return render(
+                request,
+                "register.html",
+                {"error": "Passwords do not match"}
+            )
         User.objects.create(
             username = request.POST.get("username"),
             email = request.POST.get("email"),
@@ -93,13 +106,13 @@ class LoginView(View):
         if user.exists():
             user = user.first()
             login(request, user)
-            return redirect("home")
+            return redirect("collaboration")
         return render(request, 'login.html', {"error": "Username or password is incorrect"})
 
 class LogoutView(View):
     def get(self, request):
         logout(request)
-        return redirect("login")
+        return redirect("home")
 
 class ContactView(View):
     def get(self, request):
@@ -120,7 +133,7 @@ class UserDeletion(View):
         recipient_list = [email]
         code = str(random.randrange(1000000, 9999999))
         waiting_user = waiting_user.first()
-        waiting_user.confirmation_code = code
+        waiting_user.deletion_confirmation_code = code
         waiting_user.save()
         email_data = {
             "email_body": "Click to the link below to remove your email: "
@@ -141,16 +154,20 @@ class UserDeletion(View):
 
 class ConfirmDeletion(View):
     def get(self, request, pk):
-        waiting_user = WaitingUser.objects.filter(confirmation_code = pk)
+        waiting_user = WaitingUser.objects.filter(deletion_confirmation_code = pk)
+        if waiting_user.exists():
+            user = waiting_user.first()
+            user = User.objects.filter(email = user.email)
+            user.delete()
         waiting_user.delete()
         context = {
             "message": "Email deleted succesfully"
         }
         return render(request, 'confirmation.html', context)
 
-class ColloborationView(View):
+class CollaborationView(View):
     def get(self, request):
-        return render(request, 'colloboration.html')
+        return render(request, 'collaboration.html')
 
     def post(self, request):
         Recommendation.objects.create(
@@ -161,4 +178,8 @@ class ColloborationView(View):
         context = {
             "message": "Data saved succesfully!"
         }
-        return render(request, 'colloboration.html', context)
+        return render(request, 'collaboration.html', context)
+
+class PrivacyPolicy(View):
+    def get(self, request):
+        return redirect("/static/privacy_policy.pdf/")
